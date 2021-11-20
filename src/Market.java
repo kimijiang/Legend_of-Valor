@@ -34,7 +34,7 @@ public class Market extends Cell{
     }
 
 
-    public void accessed(Player player) {
+    public void accessed(Hero hero) {// replace the Player to Hero
         displayCommodities();
         accessMenu();
         Scanner input = new Scanner(System.in);
@@ -48,28 +48,25 @@ public class Market extends Cell{
             else {
                 // Buy items
                 if(next.equals("1")) {
-                    player.showTeam();
-                    System.out.println("Input numbers for heroes to buy items.(exp: 0-3, which means the 0th hero to buy the 3th item.)");
-                    String regex2 = "[0-" + (player.getTeam().size()-1) + "]-" + "[0-9]\\d{0,1}";
+                    //System.out.println("Input numbers for heroes to buy items.(exp: 0-3, which means the 0th hero to buy the 3th item.)");
+                    //String regex2 = "[0-" + (player.getTeam().size()-1) + "]-" + "[0-9]\\d{0,1}";
 //                    System.out.println(regex2);
                     String buy = null;
                     while ((buy = input.next()) != null) {
-                        if(!buy.matches(regex2)) {
+                        /*if(!buy.matches(regex2)) {
                             System.out.println("Wrong input! Please input again.");
                             continue;
-                        }
-                        else {
+                        }*/
                             String[] num = buy.split("-");
                             if(Integer.parseInt(num[1]) >= allCommodities.size()) {
                                 System.out.println("Wrong input! Please input again.");
                                 continue;
                             }
                             Equipment equipment = getCommodityByIndex(Integer.parseInt(num[1]));
-                            equipment.buy(player.getTeam().get(Integer.parseInt(num[0])),equipment);
+                            equipment.buy(hero,equipment);
                             removeitem(equipment);
                             //buyItem(player.getTeam().get(Integer.parseInt(num[0])), Integer.parseInt(num[1])); // buy function
                             break;
-                        }
                     }
                     displayCommodities();
                     accessMenu();
@@ -77,32 +74,40 @@ public class Market extends Cell{
                 }
                 // Sell items
                 else if(next.equals("2")) {
-                    List<Hero> heroList = player.getTeam();
+                    //List<Hero> heroList = player.getTeam();//
                     List<Equipment> equipment = new ArrayList<Equipment>();
-                    for(Hero hero: heroList)
-                        equipment.addAll(hero.getAll());
+                    equipment.addAll(hero.getAll());
+                    /*for(Hero hero: heroList)
+                        equipment.addAll(hero.getAll());*/
+
                     if(equipment.size() == 0) {
                         System.out.println("Nothing to sell for each hero.");
                         continue;
                     }
-                    for(int i = 0; i<heroList.size(); i++) {
+
+                    /*for(int i = 0; i<heroList.size(); i++) {
                         System.out.print(i + ". ");
                         heroList.get(i).showEquipAndInventory();
-                    }
+                    }*/
+
+                    hero.showEquipAndInventory();
                     System.out.println("Input the name of item to sell it:");
 
                     String name = input.next();
-                    Equipment equipment1 = getCommodityByName(player.getTeam(),name);
+                    Equipment equipment1 = hero.getEquipmentByName(name);
+
                     while(true){
                         if(equipment1!=null){
                             break;
                         }
                         System.out.println("No such item. Please input again.");
                         name = input.next();
-                        equipment1 = getCommodityByName(player.getTeam(),name);
+                        equipment1 = hero.getEquipmentByName(name);
                     }
-                    equipment1.sell(player,name);
+
+                    equipment1.sell(hero,name);
                     additem(equipment1);
+
                     /*while(!sellItem(player, name)) {
                         System.out.println("No such item. Please input again.");//check invalid input
                         name = input.next();
@@ -184,7 +189,7 @@ public class Market extends Cell{
         updateAllCommodities();
     }
 
-    public void buyItem(Hero hero, int index) {// replace with Isbuyable.buy
+    /*public void buyItem(Hero hero, int index) {// replace with Isbuyable.buy
         Equipment item = getCommodityByIndex(index);
         if (hero.getLevel() < item.getReqLevel()) {
             System.out.println(hero.getName() + "'s level is lower than required.");
@@ -206,9 +211,9 @@ public class Market extends Cell{
             System.out.println(hero.getName() + " bought " + item.getName());
             hero.getEquipment(item);
         }
-    }
+    }*/
 
-    public boolean sellItem(Player player, String name) { // replace with Issellable sell
+    /*public boolean sellItem(Player player, String name) { // replace with Issellable sell
         List<Hero> heroList = player.getTeam();
         Equipment item = null;
         Hero hero = null;
@@ -235,24 +240,15 @@ public class Market extends Cell{
         }
         else
             return false;
-    }
+    }*/
 
     public Equipment getCommodityByIndex(int index) {
             return allCommodities.get(index);
     }
 
-    public Equipment getCommodityByName(List<Hero> heroList,String name){
-        Equipment item = null;
-        Hero hero = null;
-        for(int i = 0; i<heroList.size(); i++) {
-            hero = heroList.get(i);
-            item = hero.getEquipmentByName(name);
-            if(item != null){
-                break;
-            }
-        }
-        return item;
-    }
+
+
+
 
 
     // Update commodity list after buying or selling

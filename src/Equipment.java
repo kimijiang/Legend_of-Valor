@@ -45,16 +45,10 @@ public abstract class Equipment implements IsBuyable, IsSellable{
         }
     }
 
-    public void sell(Player player,String name){
-        List<Hero> heroList = player.getTeam();
-        Equipment item = null;
-        Hero hero = null;
-        for(int i = 0; i<heroList.size(); i++) {
-            hero = heroList.get(i);
-            item = hero.getEquipmentByName(name);
-            if(item != null)
-                break;
-        }
+
+
+    public void sell(Hero hero,String name){
+        Equipment item = hero.getEquipmentByName(name);
         hero.removeEquipment(item.getName());
         hero.setMoney(hero.getMoney() + item.getPrice() / 2);
         System.out.println(hero.getName() + " sold " + item.getName() + " and got " + item.getPrice() / 2);

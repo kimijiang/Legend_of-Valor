@@ -56,7 +56,7 @@ public class Player {
         }
     }
 
-    public void move(String moveSign, Map map) { // change to hero
+    /*public void move(String moveSign, Map map) { // change to hero
         // move up
         if(moveSign.equals("W") || moveSign.equals("w")) {
             // out of bound
@@ -103,10 +103,10 @@ public class Player {
                 accessCell(x, y, map, "right");
             }
         }
-    }
+    }*/
 
 
-    public void accessCell(int x, int y, Map map, String direction) {// judge cell type
+    /*public void accessCell(int x, int y, Map map, String direction) {// judge cell type
         if(map.getCell(x, y) instanceof Inaccessible)
             System.out.println("You can not move " + direction + "!");
         else if(map.getCell(x, y) instanceof Market){
@@ -120,7 +120,7 @@ public class Player {
             else
                 System.out.println("Nothing happened.");
         }
-    }
+    }*/
 
 
     public void showTeam() {

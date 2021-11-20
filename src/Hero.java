@@ -8,6 +8,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 // Hero.java - Store the information of hero in the player's team, all things they have and what they can do.
 public abstract class Hero {
@@ -26,15 +27,19 @@ public abstract class Hero {
     protected int upNeedExp; // exp needed to level up
     protected boolean condition; // true: alive, false: faint
     protected double proDodge; // the probability of dodging an attack
+    protected int heroNumber;
+    public int heroPositionX;
+    public int heroPositionY;
 
     protected Weapon weapon;
     protected Armor armor;
     protected List<Spell> spells;
     protected List<Potion> potions;
+    protected List<Hero> hlist;
 
     protected Inventory inventory; // unequipped weapons and armors are stored in the inventory
 
-    Hero(String name, double mana, double strength, double dexterity, double agility, int money, int exp) {
+    Hero(String name, double mana, double strength, double dexterity, double agility, int money, int exp, int heroNumber) { // hero number added
         this.name = name;
         this.level = 1;
         this.maxHP = 100.0;
@@ -54,6 +59,7 @@ public abstract class Hero {
         this.spells = new ArrayList<Spell>();
         this.potions = new ArrayList<Potion>();
         this.inventory = new Inventory();
+        this.heroNumber = heroNumber; //
     }
 
     // skills get increased
@@ -81,6 +87,10 @@ public abstract class Hero {
             return false;
     }
 
+    public int getHeroNumber() {
+        return heroNumber;
+    }
+
     public void recExp(int exp) {
         this.exp += exp;
     }
@@ -91,9 +101,11 @@ public abstract class Hero {
     }
 
     // Heroes who fainted reborn after the fight
-    public void reborn() {
+    public void reborn() {// relocate to nexus
         condition = true;
-        HP = maxHP / 2;
+        HP = maxHP;
+        this.setMoney(getMoney() / 2);
+        System.out.println(getName() + " lost " + getMoney() / 2 + " money.");
     }
 
 
@@ -168,7 +180,7 @@ public abstract class Hero {
             }
     }
 
-    public void castSpellTo(int index, Monster monster) {// Spell.cast
+    public void castSpellTo(int index, Monster monster) {// Spell.cast TODO:implements cast
         double manaNeeded = spells.get(index).getMana();
         if(mana < manaNeeded)
             System.out.println("Failed! " + name + " does not have enough mana.");
@@ -235,11 +247,6 @@ public abstract class Hero {
         potions.remove(index);
         System.out.println(name + "'s statistics have increased.");
     }
-
-    public void removepotion(int index){
-
-    }
-
 
     public void consumePotionByName(String name) {
         int i = 0;
@@ -461,5 +468,210 @@ public abstract class Hero {
             stats += "Armor: " + armor.getName();
         return stats;
     }
+
+    public void move(String moveSign, Map map){
+        // move up
+        int[][] heroesPosition = map.getLoacationOfHeroes();
+        heroPositionX = heroesPosition[heroNumber][0];
+        heroPositionY = heroesPosition[heroNumber][1];
+
+        if(moveSign.equals("W") || moveSign.equals("w")) {
+            // out of bound
+            if(heroPositionY - 1 < 0) {
+                System.out.println("You can not move up!");
+                return;
+            }
+            else {
+                if(map.checkCell(heroPositionX,heroPositionY-1)){
+                    map.setCell(heroPositionX,heroPositionY,0);
+                    map.setCell(heroPositionX,heroPositionY-1,1);
+                    accessCell(heroPositionX, heroPositionY-1, map, "up");
+                }
+                else{
+                    System.out.println("A hero is already in this cell! ");
+                    return;
+                }
+            }
+        }
+
+        else if (moveSign.equals("S") || moveSign.equals("s")) {
+            if(heroPositionY + 1 >= map.getLength_side()) {
+                System.out.println("You can not move down!");
+                return;
+            }
+            else {
+                if(map.checkCell(heroPositionX,heroPositionY+1)){
+                    map.setCell(heroPositionX,heroPositionY,0);
+                    map.setCell(heroPositionX,heroPositionY+1,1);
+                    accessCell(heroPositionX, heroPositionY+1, map, "down");
+                }
+                else{
+                    System.out.println("A hero is already in this cell! ");
+                    return;
+                }
+            }
+        }
+
+        else if(moveSign.equals("A") || moveSign.equals("a")) {
+            if(heroPositionX - 1 < 0) {
+                System.out.println("You can not move left!");
+                return;
+            }
+            else {
+                if(map.checkCell(heroPositionX-1,heroPositionY)) {
+                    map.setCell(heroPositionX,heroPositionY,0);
+                    map.setCell(heroPositionX-1,heroPositionY,1);
+                    accessCell(heroPositionX-1, heroPositionY, map, "left");
+                }
+                else{
+                    System.out.println("A hero is already in this cell! ");
+                    return;
+                }
+            }
+        }
+
+        else if(moveSign.equals("D") || moveSign.equals("d")) {
+            if(heroPositionX + 1 >= map.getLength_side()) {
+                System.out.println("You can not move right!");
+                return;
+            }
+            else {
+                if(map.checkCell(heroPositionX+1,heroPositionY)){
+                    map.setCell(heroPositionX,heroPositionY,0);
+                    map.setCell(heroPositionX+1,heroPositionY,1);
+                    accessCell(heroPositionX+1, heroPositionY, map, "right");
+                }
+                else{
+                    System.out.println("A hero is already in this cell! ");
+                    return;
+                }
+            }
+        }
+
+        else if(moveSign.equals("T") || moveSign.equals("t")){ //teleport
+            teleport(heroPositionX,heroPositionY,map);
+        }
+
+        else if(moveSign.equals("B") || moveSign.equals("b")){
+            back(heroPositionX,heroPositionY,map);
+        }
+
+
+    }
+
+    public void accessCell(int x, int y, Map map, String direction) {// judge cell type
+        if(map.getCell(x, y) instanceof Inaccessible)
+            System.out.println("You can not move " + direction + "!");
+        else if(map.getCell(x, y) instanceof Market){
+            map.updateLocation(x, y); // TODO:para heronumber
+            ((Market) map.getCell(x, y)).accessed(this);
+        }
+        else if(map.getCell(x, y) instanceof CommonSpace) {
+            map.updateLocation(x, y);
+            if(((CommonSpace) map.getCell(x, y)).ifEngageBattle()){
+                // Plain Bush Cave Koulou
+                if(map.getCell(x,y) instanceof Plain){
+                    hlist.add(this);
+                    new Fight(hlist).fight();
+                    hlist.remove(this);
+                }
+                else if(map.getCell(x,y) instanceof Bush){
+                    this.dexterity = dexterity*1.1;
+                    hlist.add(this);
+                    new Fight(hlist).fight();
+                    hlist.remove(this);
+                    this.dexterity = dexterity/1.1;
+                }
+                else if(map.getCell(x,y) instanceof Cave){
+                    this.agility = agility*1.1;
+                    hlist.add(this);
+                    new Fight(hlist).fight();
+                    hlist.remove(this);
+                    this.agility = agility/1.1;
+                }
+                else{
+                    this.strength = strength*1.1;
+                    hlist.add(this);
+                    new Fight(hlist).fight();
+                    hlist.remove(this);
+                    this.strength = strength/1.1;
+                }
+            }
+            else
+                System.out.println("Nothing happened.");
+        }
+    }
+
+    public int maxMonsterPosition(int[][] monstersPosition){
+        int[] a = new int[monstersPosition.length];
+        for(int i =0;i<monstersPosition.length;i++){
+            a[i] = monstersPosition[i][1];
+        }
+
+        int temp;
+        for(int i =0;i<a.length;i++){
+            for(int j = i+1;j<a.length;j++){
+                if(a[j]>a[i]){
+                    temp = a[i];
+                    a[i] = a[j];
+                    a[j] = temp;
+                }
+            }
+        }
+        return a[0];
+    }
+
+
+    public void teleport(int x,int y, Map map){
+        Scanner s = new Scanner(System.in);
+        int maxMonsterX = maxMonsterPosition( map.getLocationOfMonsters());
+        int lane;
+        while(true){
+            System.out.println("Which lane do you want to transport to? ");
+            lane = s.nextInt();
+            s.nextLine();
+            if(lane>=1 && lane<=3){
+                break;
+            }
+            System.out.println("Please input the valid number of lane");
+        }
+
+        if(lane == 1){
+            map.setCell(x,y,0);
+            map.setCell(maxMonsterX,1,1);
+            map.updateLocation(maxMonsterX,1);
+        }
+        else if(lane == 2){
+            map.setCell(x,y,0);
+            map.setCell(maxMonsterX,4,1);
+            map.updateLocation(maxMonsterX,4);
+        }
+        else{
+            map.setCell(x,y,0);
+            map.setCell(maxMonsterX,7,1);
+            map.updateLocation(maxMonsterX,7);
+        }
+
+    }
+
+
+    public void back(int x, int y, Map map){//TODO:heronumber
+        if(this.heroNumber == 0){
+            map.setCell(x,y,0);
+            map.updateLocation(7,0);
+        }
+
+        else if(this.heroNumber == 1){
+            map.setCell(x,y,0);
+            map.updateLocation(7,3);
+        }
+
+        else{
+            map.setCell(x,y,0);
+            map.updateLocation(7,6);
+        }
+
+    }
+
 
 }

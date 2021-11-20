@@ -11,6 +11,7 @@ public class Monster {
 
     private static final String ANSI_RESET = "\033[0m";
     public static final String ANSI_RED = "\u001B[31m";
+    private int monsterNumber = 0;
 
     protected String name;
     protected int level;
@@ -21,7 +22,7 @@ public class Monster {
     protected double defense;
     protected double dodgeChance;
 
-    Monster(String name, int level, double damage, double defense, double dodgeChance) {
+    Monster(String name, int level, double damage, double defense, double dodgeChance, int monsterNumber) {
         this.name = ANSI_RED + name + ANSI_RESET;
         this.level = level;
         this.HP = 100.0 * level;
@@ -29,6 +30,7 @@ public class Monster {
         this.damage = damage;
         this.defense = defense;
         this.dodgeChance = dodgeChance;
+        this.monsterNumber = monsterNumber;
     }
 
     public void attacked(double damage, Hero hero) {
@@ -88,5 +90,7 @@ public class Monster {
                 "Defense: " + defense + "  " +
                 "Damage: " + damage;
     }
+
+
 
 }

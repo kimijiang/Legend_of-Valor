@@ -84,6 +84,7 @@ public class Map {
     }
 
 
+
     public void displayMap() {
         // display the whole map
         System.out.println(ANSI_RED + "X" + ANSI_RESET + ":Inaccessible " + ANSI_BLUE + "M" + ANSI_RESET + ":Market  "+ ANSI_GREEN +"*" +ANSI_RESET+":Heroes Team");
@@ -121,5 +122,16 @@ public class Map {
     }
 
     public int getLength_side() {return length_side;}
+
+    public boolean checkCell(int x,int y){
+        if(cells[x][y].getFlag()==1){
+            return false;
+        }
+        return true;
+    }
+
+    public void setCell(int x,int y,int flag){
+        cells[x][y].setFlag(flag);
+    }
 
 }
