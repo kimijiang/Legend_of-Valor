@@ -1,3 +1,3 @@
 public interface IsSellable {
-    public void sell(Player player,String name);
+    public void sell(Hero hero,String name);
 }

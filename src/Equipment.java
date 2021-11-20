@@ -46,7 +46,6 @@ public abstract class Equipment implements IsBuyable, IsSellable{
     }
 
 
-
     public void sell(Hero hero,String name){
         Equipment item = hero.getEquipmentByName(name);
         hero.removeEquipment(item.getName());

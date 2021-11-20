@@ -113,7 +113,7 @@ public abstract class Hero {
         if(weapon == null)
             return 0.05 * strength;
         else
-            return 0.05 * (strength + weapon.getDamage());
+            return 0.05 * (strength + weapon.attack());
     }
 
 
@@ -181,14 +181,15 @@ public abstract class Hero {
     }
 
     public void castSpellTo(int index, Monster monster) {// Spell.cast TODO:implements cast
-        double manaNeeded = spells.get(index).getMana();
+        /*double manaNeeded = spells.get(index).getMana();
         if(mana < manaNeeded)
             System.out.println("Failed! " + name + " does not have enough mana.");
         else {
             monster.attacked(spells.get(index).getBaseDamage() * (1 + dexterity / 10000.0), this);
             spells.get(index).deteriorate(monster);
             mana -= manaNeeded;
-        }
+        }*/
+        spells.get(index).cast(this,monster);
     }
 
     public void attacked(double damage, Monster monster) {// armor.wear  reduce damage
@@ -197,7 +198,7 @@ public abstract class Hero {
             return;
         }
         if(armor != null) {
-            if(damage - defense - armor.wear() >= 0)
+            if(damage - defense - armor.wear() >= 0)//armor.wear reduce damage
                 damage -= defense + armor.wear();
             else
                 damage = 0;
@@ -218,8 +219,8 @@ public abstract class Hero {
     }
 
 
-    public void usePotion(int index) {
-        double increase = potions.get(index).getIncreaseAttr();
+    public void usePotion(int index) {//potion.use
+        /*double increase = potions.get(index).getIncreaseAttr();
         List<String> attributes = potions.get(index).getAffectedAttr();
         for(String attribute: attributes) {
             switch (attribute) {
@@ -244,9 +245,14 @@ public abstract class Hero {
                     break;
             }
         }
+
+        System.out.println(name + "'s statistics have increased.");*/
+
+        potions.get(index).use(this);
         potions.remove(index);
-        System.out.println(name + "'s statistics have increased.");
     }
+
+
 
     public void consumePotionByName(String name) {
         int i = 0;
