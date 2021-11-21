@@ -91,6 +91,15 @@ public class Monster {
                 "Damage: " + damage;
     }
 
+    public boolean move(Map map){
+        int hero = map.getEnemy(monsterNumber);
+        if (hero < 0){
+            return false;
+        } else {
+            map.updateMonsterLocation(monsterNumber);
+            return true;
+        }
+    }
 
 
 }

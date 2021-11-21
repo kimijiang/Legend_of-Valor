@@ -8,6 +8,7 @@
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,7 +25,7 @@ public class Map {
     private int num_cells;
     private int[] location_player;
     private int[][] heroPostion;
-    private int[][] monsterPostion;
+    private List<Integer[]> monsterPostion;
     private Cell[][] cells;
 
     Map(int n) {
@@ -117,12 +118,24 @@ public class Map {
 //        }
     }
 
-
-    public void updateLocation(int x, int y) {
-        location_player[0] = x;
-        location_player[1] = y;
+    public void monstersSpawn(){
+        monsterPostion.add(new Integer[]{0,0});
+        monsterPostion.add(new Integer[]{3,0});
+        monsterPostion.add(new Integer[]{6,0});
     }
 
+    public void newMonster(int x, int y){
+        monsterPostion.add(new Integer[]{x,y});
+    }
+
+    public void updateLocation(int x, int y, int hero) {
+        heroPostion[hero][0] = x;
+        heroPostion[hero][1] = y;
+    }
+
+    public void updateMonsterLocation(int monster){
+        monsterPostion.get(monster)[1] += 1;
+    }
 
 
     public void displayMap() {
@@ -148,7 +161,19 @@ public class Map {
 
     private void drawCellContent(int row){
         for (int col = 0; col<length_side; col++){
-            System.out.print("|       |  ");
+            String hero = "  ";
+            String monster = "  ";
+            for (int i = 0; i<heroPostion.length; i++){
+                if (heroPostion[i][0] == col && heroPostion[i][1] == row){
+                    hero = "H" + (i+1);
+                }
+            }
+            for (int i = 0; i<monsterPostion.size(); i++){
+                if (monsterPostion.get(i)[0] == col && monsterPostion.get(i)[1] == row){
+                    monster = "M" + (i+1);
+                }
+            }
+            System.out.print("| "+hero+" "+monster+" |  ");
         }
         System.out.println();
     }
@@ -194,13 +219,18 @@ public class Map {
     }
 
     public int[][] getLocationOfMonsters(){
-        return monsterPostion;
+        int[][] a = new int[monsterPostion.size()][monsterPostion.get(0).length];
+        int i = 0;
+        for (Integer[] n : monsterPostion){
+            a[i][0] = n[0];
+            a[i][1] = n[1];
+        }
+        return a;
     }
 
     public int getEnemy(int monster){
-        int monsterRow = monsterPostion[monster][1]+1;
-        int monsterCol = monsterPostion[monster][0];
-//        monsterPostion.
+        int monsterRow = monsterPostion.get(monster)[1]+1;
+        int monsterCol = monsterPostion.get(monster)[0];
         for(int i = 0; i<heroPostion.length; i++){
             int heroRow = heroPostion[i][1];
             int heroCol = heroPostion[i][0];
@@ -212,5 +242,6 @@ public class Map {
         }
         return -1;
     }
+
 
 }
