@@ -9,7 +9,7 @@
 import java.util.*;
 
 // Market.java - A subclass of cell, heroes can access a market and buy or sell items.
-public class Market extends Cell{
+public abstract class Market extends Cell{
 
     public static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_RESET = "\033[0m";
@@ -21,7 +21,7 @@ public class Market extends Cell{
     private List<Equipment> allCommodities; // Include weapons, armors, spells and potions.
 
     Market(List<Weapon> weapons, List<Armor> armors, List<Spell> spells, List<Potion> potions) {
-        super(ANSI_BLUE + "M" + ANSI_RESET);
+        super(ANSI_BLUE + "N" + ANSI_RESET);
         weaponsSold = weapons;
         armorsSold = armors;
         spellsSold = spells;

@@ -6,6 +6,7 @@
  *
  */
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +23,8 @@ public class Map {
     private int length_side;
     private int num_cells;
     private int[] location_player;
+    private int[][] heroPostion;
+    private int[][] monsterPostion;
     private Cell[][] cells;
 
     Map(int n) {
@@ -35,46 +38,83 @@ public class Map {
 
     // All cells are randomly assigned with CommonSpace, Inaccessible and Market
     public void randomlyAssigned() {
-        int num_inAcc = (int) (num_cells * 0.2);
-        int num_market = (int) (num_cells * 0.3);
-        int num_common = num_cells - num_inAcc - num_market;
-        List<Integer> numList = Utils.randomNumList(num_inAcc + num_market, num_cells);
-        for(int i = 0; i<numList.size(); i++) {
-            int index = numList.get(i);
-            int row = index / length_side;
-            int column = index % length_side;
-            if(i < num_inAcc)
-                cells[row][column] = new Inaccessible();
-            else  {
-                List<Spell> spellList = new ArrayList<>();
-                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/FireSpells.txt"));
-                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/IceSpells.txt"));
-                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/LightningSpells.txt"));
-                cells[row][column] = new Market(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Weaponry.txt"),
-                        Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Armory.txt"),
-                        spellList,
-                        Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Potions.txt"));
+
+        for(int row = 0; row < length_side; row++){
+            for(int col = 0; col < length_side; col++){
+                if (row == 2 || row == 5){
+                    cells[row][col] = new Inaccessible();
+                    continue;
+                }
+                if (col == 0 || col == 7){
+                    List<Spell> spellList = new ArrayList<>();
+                    spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/FireSpells.txt"));
+                    spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/IceSpells.txt"));
+                    spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/LightningSpells.txt"));
+                    cells[row][col] = new NexusCell(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Weaponry.txt"),
+                            Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Armory.txt"),
+                            spellList,
+                            Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Potions.txt"));
+                }
+
+                Random r = new Random();
+                int n = r.nextInt(5);
+                if (n == 0){
+                    cells[row][col] = new BushCell();
+                } else if (n == 1){
+                    cells[row][col] = new CaveCell();
+                } else if (n == 2){
+                    cells[row][col] = new KoulouCell();
+                } else {
+                    cells[row][col] = new PlainCell();
+                }
             }
         }
-        // assigned with CommonSpace
-        for(int i = 0; i< num_cells; i++) {
-            int row = i / length_side;
-            int column = i % length_side;
-            if(!numList.contains(i))
-                cells[row][column] = new CommonSpace();
-        }
+//        int num_inAcc = (int) (num_cells * 0.2);
+//        int num_market = (int) (num_cells * 0.3);
+//        int num_common = num_cells - num_inAcc - num_market;
+//        List<Integer> numList = Utils.randomNumList(num_inAcc + num_market, num_cells);
+//        for(int i = 0; i<numList.size(); i++) {
+//            int index = numList.get(i);
+//            int row = index / length_side;
+//            int column = index % length_side;
+//            if(i < num_inAcc)
+//                cells[row][column] = new Inaccessible();
+//            else  {
+//                List<Spell> spellList = new ArrayList<>();
+//                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/FireSpells.txt"));
+//                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/IceSpells.txt"));
+//                spellList.addAll(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/LightningSpells.txt"));
+//                cells[row][column] = new Market(Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Weaponry.txt"),
+//                        Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Armory.txt"),
+//                        spellList,
+//                        Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Potions.txt"));
+//            }
+//        }
+//        // assigned with CommonSpace
+//        for(int i = 0; i< num_cells; i++) {
+//            int row = i / length_side;
+//            int column = i % length_side;
+//            if(!numList.contains(i))
+//                cells[row][column] = new CommonSpace();
+//        }
     }
 
 
     public void initiateLocation() {
+        this.heroPostion[0][0] = 0;
+        this.heroPostion[0][1] = 7;
+        this.heroPostion[1][0] = 3;
+        this.heroPostion[1][1] = 7;
+        this.heroPostion[2][0] = 6;
+        this.heroPostion[2][1] = 7;
         // randomly assign the initial location of player
-        Random rd = new Random();
-        location_player[0] = rd.nextInt(length_side);
-        location_player[1] = rd.nextInt(length_side);
-        while(!(cells[location_player[0]][location_player[1]] instanceof CommonSpace)) {
-            location_player[0] = rd.nextInt(length_side);
-            location_player[1] = rd.nextInt(length_side);
-        }
+//        Random rd = new Random();
+//        location_player[0] = rd.nextInt(length_side);
+//        location_player[1] = rd.nextInt(length_side);
+//        while(!(cells[location_player[0]][location_player[1]] instanceof CommonSpace)) {
+//            location_player[0] = rd.nextInt(length_side);
+//            location_player[1] = rd.nextInt(length_side);
+//        }
     }
 
 
@@ -87,15 +127,31 @@ public class Map {
 
     public void displayMap() {
         // display the whole map
-        System.out.println(ANSI_RED + "X" + ANSI_RESET + ":Inaccessible " + ANSI_BLUE + "M" + ANSI_RESET + ":Market  "+ ANSI_GREEN +"*" +ANSI_RESET+":Heroes Team");
+        System.out.println(ANSI_RED + "X" + ANSI_RESET + ":Inaccessible " + ANSI_BLUE + "N" + ANSI_RESET + ":Nexus  "+ ANSI_GREEN +"*" +ANSI_RESET+":Heroes Team");
         for(int i = 0; i<length_side; i++) {
-            drawLine();
-            drawCell(i);
+            drawRowBoarder(i);
+            drawCellContent(i);
+            drawRowBoarder(i);
+            System.out.println();
         }
         drawLine();
         System.out.println("W/w: move up, A/a: move left, S/s: move down, D/d: move right, Q/q: quit game, I/i: show information, G/g: show inventory.");
     }
 
+    private void drawRowBoarder(int row){
+        for (int col = 0; col<length_side; col++){
+            String sign = cells[col][row].getSign();
+            System.out.print(sign+" - "+sign+" - "+sign+"  ");
+        }
+        System.out.println();
+    }
+
+    private void drawCellContent(int row){
+        for (int col = 0; col<length_side; col++){
+            System.out.print("|       |  ");
+        }
+        System.out.println();
+    }
 
     private void drawLine() {
         // draw every single horizontal line
@@ -130,8 +186,31 @@ public class Map {
         return true;
     }
 
-    public void setCell(int x,int y,int flag){
+    public void setCell(int x,int y,int flag) {
         cells[x][y].setFlag(flag);
+    }
+    public int[][] getLocationOfHeroes(){
+        return heroPostion;
+    }
+
+    public int[][] getLocationOfMonsters(){
+        return monsterPostion;
+    }
+
+    public int getEnemy(int monster){
+        int monsterRow = monsterPostion[monster][1]+1;
+        int monsterCol = monsterPostion[monster][0];
+//        monsterPostion.
+        for(int i = 0; i<heroPostion.length; i++){
+            int heroRow = heroPostion[i][1];
+            int heroCol = heroPostion[i][0];
+            if ((heroCol == monsterCol && heroRow == monsterRow) ||
+                    (heroCol == monsterCol+1 && heroRow == monsterRow) ||
+                    (heroCol == monsterCol-1 && heroRow == monsterRow)){
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

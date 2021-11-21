@@ -13,7 +13,7 @@ public class Inaccessible extends Cell{
     private static final String ANSI_RED = "\033[31m";
 
     Inaccessible() {
-        super(ANSI_RED + "X" + ANSI_RESET);
+        super(ANSI_RED + "I" + ANSI_RESET);
     }
 
 }

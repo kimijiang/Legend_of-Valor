@@ -120,7 +120,7 @@ public abstract class Hero {
     public void getEquipment(Equipment item) {
         if(item instanceof Spell) {
             spells.add((Spell) item);
-            System.out.println(name + " got a new " + item.getClass().toString().split("\s")[1] + " " + item.getName() + ".");
+            System.out.println(name + " got a new " + item.getClass().toString().split(" ")[1] + " " + item.getName() + ".");
         }
         else if(item instanceof Potion) {
             potions.add((Potion) item);
@@ -128,7 +128,7 @@ public abstract class Hero {
         }
         else {
             inventory.add(item);
-            System.out.println(name + " got the " + item.getClass().toString().split("\s")[1] + ".");
+            System.out.println(name + " got the " + item.getClass().toString().split(" ")[1] + ".");
         }
     }
 
@@ -259,7 +259,7 @@ public abstract class Hero {
 
 
     public void showEquipAndInventory() {
-        System.out.println(name + "(" + this.getClass().toString().split("\s")[1] + "):");
+        System.out.println(name + "(" + this.getClass().toString().split(" ")[1] + "):");
         if(weapon != null)
             System.out.print("Weapon: " + weapon.getName() + "  ");
         else
@@ -326,7 +326,7 @@ public abstract class Hero {
         }
         for(int i = 0; i<spells.size(); i++) {
             Spell spell = spells.get(i);
-            System.out.println(i + ". " + spell.getName() + "(" + spell.getClass().toString().split("\s")[1] + ")  " + spell.getMana() + " mana");
+            System.out.println(i + ". " + spell.getName() + "(" + spell.getClass().toString().split(" ")[1] + ")  " + spell.getMana() + " mana");
         }
     }
 
@@ -442,7 +442,7 @@ public abstract class Hero {
 
     // not in a fight
     public String stats1() {
-        return name + "(" + getClass().toString().split("\s")[1] +"):\n" +
+        return name + "(" + getClass().toString().split(" ")[1] +"):\n" +
                 "Level:" + level + "  " +
                 "HP:" + HP + "  " +
                 "Mana:" + mana + "  " +
@@ -471,7 +471,7 @@ public abstract class Hero {
 
     public void move(String moveSign, Map map){
         // move up
-        int[][] heroesPosition = map.getLoacationOfHeroes();
+        int[][] heroesPosition = map.getLocationOfHeroes();
         heroPositionX = heroesPosition[heroNumber][0];
         heroPositionY = heroesPosition[heroNumber][1];
 
@@ -570,19 +570,19 @@ public abstract class Hero {
             map.updateLocation(x, y);
             if(((CommonSpace) map.getCell(x, y)).ifEngageBattle()){
                 // Plain Bush Cave Koulou
-                if(map.getCell(x,y) instanceof Plain){
+                if(map.getCell(x,y) instanceof PlainCell){
                     hlist.add(this);
                     new Fight(hlist).fight();
                     hlist.remove(this);
                 }
-                else if(map.getCell(x,y) instanceof Bush){
+                else if(map.getCell(x,y) instanceof BushCell){
                     this.dexterity = dexterity*1.1;
                     hlist.add(this);
                     new Fight(hlist).fight();
                     hlist.remove(this);
                     this.dexterity = dexterity/1.1;
                 }
-                else if(map.getCell(x,y) instanceof Cave){
+                else if(map.getCell(x,y) instanceof CaveCell){
                     this.agility = agility*1.1;
                     hlist.add(this);
                     new Fight(hlist).fight();

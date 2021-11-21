@@ -8,10 +8,10 @@
 
 
 // CommonSpace.java -  A subclass of cell, fight will happen in the common space under a probability.
-public class CommonSpace extends Cell{
+public abstract class CommonSpace extends Cell{
 
-    CommonSpace() {
-        super(" ");
+    CommonSpace(String sign) {
+        super(sign);
     }
 
     public boolean ifEngageBattle() {
