@@ -57,6 +57,7 @@ public class Map {
                             Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Armory.txt"),
                             spellList,
                             Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Potions.txt"));
+                    continue;
                 }
 
                 Random r = new Random();
