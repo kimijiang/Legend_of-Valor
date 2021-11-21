@@ -1,3 +1,3 @@
 public interface IsUseable {
-    public void use(Hero hero, int index);
+    public void use(Hero hero);
 }

@@ -31,7 +31,7 @@ public class Potion extends Equipment implements IsUseable{
 
     public List<String> getAffectedAttr() {return affectedAttr;}
 
-    public void use(Hero hero, int index){
+    public void use(Hero hero){
         double increase = getIncreaseAttr();
         List<String> attributes = getAffectedAttr();
         for(String attribute: attributes) {
@@ -57,7 +57,6 @@ public class Potion extends Equipment implements IsUseable{
                     break;
             }
         }
-        hero.getPotions().remove(index);
         System.out.println(name + "'s statistics have increased.");
     }
 
