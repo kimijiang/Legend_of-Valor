@@ -33,6 +33,8 @@ public class Map {
         num_cells = n * n;
         location_player = new int[2];
         cells = new Cell[n][n];
+        heroPostion = new int[3][3];
+        monsterPostion = new ArrayList<>();
         randomlyAssigned();
         initiateLocation();
     }
@@ -124,9 +126,9 @@ public class Map {
         monsterPostion.add(new Integer[]{6,0});
     }
 
-    public void newMonster(int x, int y){
-        monsterPostion.add(new Integer[]{x,y});
-    }
+//    public void newMonster(int x, int y){
+//        monsterPostion.add(new Integer[]{x,y});
+//    }
 
     public void updateLocation(int x, int y, int hero) {
         heroPostion[hero][0] = x;
@@ -140,14 +142,14 @@ public class Map {
 
     public void displayMap() {
         // display the whole map
-        System.out.println(ANSI_RED + "X" + ANSI_RESET + ":Inaccessible " + ANSI_BLUE + "N" + ANSI_RESET + ":Nexus  "+ ANSI_GREEN +"*" +ANSI_RESET+":Heroes Team");
+        System.out.println(ANSI_RED + "X" + ANSI_RESET + ":Inaccessible " + ANSI_BLUE + "N" + ANSI_RESET + ":Nexus  H: Hero, M: Monster");
         for(int i = 0; i<length_side; i++) {
             drawRowBoarder(i);
             drawCellContent(i);
             drawRowBoarder(i);
             System.out.println();
         }
-        drawLine();
+//        drawLine();
         System.out.println("W/w: move up, A/a: move left, S/s: move down, D/d: move right, Q/q: quit game, I/i: show information, G/g: show inventory.");
     }
 
@@ -196,7 +198,7 @@ public class Map {
 
     }
 
-    public int[] getLocation_player() {return location_player;}
+//    public int[] getLocation_player() {return location_player;}
 
     public Cell getCell(int x, int y) {
         return cells[x][y];
@@ -234,6 +236,22 @@ public class Map {
         for(int i = 0; i<heroPostion.length; i++){
             int heroRow = heroPostion[i][1];
             int heroCol = heroPostion[i][0];
+            if ((heroCol == monsterCol && heroRow == monsterRow) ||
+                    (heroCol == monsterCol+1 && heroRow == monsterRow) ||
+                    (heroCol == monsterCol-1 && heroRow == monsterRow)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    public int getEnemyForHero(int hero){
+        int heroRow = heroPostion[hero][1]+1;
+        int heroCol = heroPostion[hero][0];
+        for(int i = 0; i<monsterPostion.size(); i++){
+            int monsterRow = monsterPostion.get(i)[1];
+            int monsterCol = monsterPostion.get(i)[0];
             if ((heroCol == monsterCol && heroRow == monsterRow) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow) ||
                     (heroCol == monsterCol-1 && heroRow == monsterRow)){

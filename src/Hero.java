@@ -35,11 +35,11 @@ public abstract class Hero {
     protected Armor armor;
     protected List<Spell> spells;
     protected List<Potion> potions;
-    protected List<Hero> hlist;
+//    protected List<Hero> hlist;
 
     protected Inventory inventory; // unequipped weapons and armors are stored in the inventory
 
-    Hero(String name, double mana, double strength, double dexterity, double agility, int money, int exp, int heroNumber) { // hero number added
+    Hero(String name, double mana, double strength, double dexterity, double agility, int money, int exp) { // hero number added
         this.name = name;
         this.level = 1;
         this.maxHP = 100.0;
@@ -59,7 +59,7 @@ public abstract class Hero {
         this.spells = new ArrayList<Spell>();
         this.potions = new ArrayList<Potion>();
         this.inventory = new Inventory();
-        this.heroNumber = heroNumber; //
+//        this.heroNumber = heroNumber;
     }
 
     // skills get increased
@@ -554,13 +554,13 @@ public abstract class Hero {
             }
         }
 
-        else if(moveSign.equals("T") || moveSign.equals("t")){ //teleport
-            teleport(heroPositionX,heroPositionY,map);
-        }
-
-        else if(moveSign.equals("B") || moveSign.equals("b")){
-            back(heroPositionX,heroPositionY,map);
-        }
+//        else if(moveSign.equals("T") || moveSign.equals("t")){ //teleport
+//            teleport(heroPositionX,heroPositionY,map);
+//        }
+//
+//        else if(moveSign.equals("B") || moveSign.equals("b")){
+//            back(heroPositionX,heroPositionY,map);
+//        }
 
 
     }
@@ -569,37 +569,37 @@ public abstract class Hero {
         if(map.getCell(x, y) instanceof Inaccessible)
             System.out.println("You can not move " + direction + "!");
         else if(map.getCell(x, y) instanceof Market){
-            map.updateLocation(x, y); // TODO:para heronumber
+            map.updateLocation(x, y, heroNumber); // TODO:para heronumber
             ((Market) map.getCell(x, y)).accessed(this);
         }
         else if(map.getCell(x, y) instanceof CommonSpace) {
-            map.updateLocation(x, y);
+            map.updateLocation(x, y, heroNumber);
             if(((CommonSpace) map.getCell(x, y)).ifEngageBattle()){
                 // Plain Bush Cave Koulou
                 if(map.getCell(x,y) instanceof PlainCell){
-                    hlist.add(this);
-                    new Fight(hlist).fight();
-                    hlist.remove(this);
+//                    hlist.add(this);
+//                    new Fight(hlist).fight();
+//                    hlist.remove(this);
                 }
                 else if(map.getCell(x,y) instanceof BushCell){
                     this.dexterity = dexterity*1.1;
-                    hlist.add(this);
-                    new Fight(hlist).fight();
-                    hlist.remove(this);
+//                    hlist.add(this);
+//                    new Fight(hlist).fight();
+//                    hlist.remove(this);
                     this.dexterity = dexterity/1.1;
                 }
                 else if(map.getCell(x,y) instanceof CaveCell){
                     this.agility = agility*1.1;
-                    hlist.add(this);
-                    new Fight(hlist).fight();
-                    hlist.remove(this);
+//                    hlist.add(this);
+//                    new Fight(hlist).fight();
+//                    hlist.remove(this);
                     this.agility = agility/1.1;
                 }
                 else{
                     this.strength = strength*1.1;
-                    hlist.add(this);
-                    new Fight(hlist).fight();
-                    hlist.remove(this);
+//                    hlist.add(this);
+//                    new Fight(hlist).fight();
+//                    hlist.remove(this);
                     this.strength = strength/1.1;
                 }
             }
@@ -628,56 +628,65 @@ public abstract class Hero {
     }
 
 
-    public void teleport(int x,int y, Map map){
+    public void teleport(int lane, Map map){
         Scanner s = new Scanner(System.in);
         int maxMonsterX = maxMonsterPosition( map.getLocationOfMonsters());
-        int lane;
-        while(true){
-            System.out.println("Which lane do you want to transport to? ");
-            lane = s.nextInt();
-            s.nextLine();
-            if(lane>=1 && lane<=3){
-                break;
-            }
-            System.out.println("Please input the valid number of lane");
-        }
+//        while(true){
+//            System.out.println("Which lane do you want to transport to? ");
+//            lane = s.nextInt();
+//            s.nextLine();
+//            if(lane>=1 && lane<=3){
+//                break;
+//            }
+//            System.out.println("Please input the valid number of lane");
+//        }
 
-        if(lane == 1){
-            map.setCell(x,y,0);
+        if(lane == 0){
+            map.setCell(heroPositionX, heroPositionY,0);
             map.setCell(maxMonsterX,1,1);
-            map.updateLocation(maxMonsterX,1);
+            map.updateLocation(maxMonsterX,1, heroNumber);
         }
-        else if(lane == 2){
-            map.setCell(x,y,0);
+        else if(lane == 1){
+            map.setCell(heroPositionX, heroPositionY,0);
             map.setCell(maxMonsterX,4,1);
-            map.updateLocation(maxMonsterX,4);
+            map.updateLocation(maxMonsterX,4, heroNumber);
         }
         else{
-            map.setCell(x,y,0);
+            map.setCell(heroPositionX, heroPositionY,0);
             map.setCell(maxMonsterX,7,1);
-            map.updateLocation(maxMonsterX,7);
+            map.updateLocation(maxMonsterX,7, heroNumber);
         }
 
     }
 
 
-    public void back(int x, int y, Map map){//TODO:heronumber
+    public void back(Map map){
         if(this.heroNumber == 0){
-            map.setCell(x,y,0);
-            map.updateLocation(7,0);
+            map.setCell(heroPositionX, heroPositionY,0);
+            map.updateLocation(7,0, heroNumber);
+            heroPositionX = 7;
+            heroPositionY = 0;
         }
 
         else if(this.heroNumber == 1){
-            map.setCell(x,y,0);
-            map.updateLocation(7,3);
+            map.setCell(heroPositionX, heroPositionY,0);
+            map.updateLocation(7,3, heroNumber);
+            heroPositionX = 7;
+            heroPositionY = 3;
         }
 
         else{
-            map.setCell(x,y,0);
-            map.updateLocation(7,6);
+            map.setCell(heroPositionX, heroPositionY,0);
+            map.updateLocation(7,6, heroNumber);
+            heroPositionX = 7;
+            heroPositionY = 6;
         }
 
     }
 
+
+    public void setHeroNumber(int heroNumber) {
+        this.heroNumber = heroNumber;
+    }
 
 }

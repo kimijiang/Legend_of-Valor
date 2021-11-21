@@ -47,11 +47,14 @@ public class Player {
             Warrior warrior = warriorList.get(rd.nextInt(warriorList.size()));
             Sorcerer sorcerer = sorcererList.get(rd.nextInt(sorcererList.size()));
             Paladin paladin = paladinList.get(rd.nextInt(paladinList.size()));
+            warrior.setHeroNumber(0);
             team.add(warrior);
             System.out.println(warrior.getName() + "(Warrior) joined your team.");
             team.add(sorcerer);
+            sorcerer.setHeroNumber(1);
             System.out.println(sorcerer.getName() + "(Sorcerer) joined your team.");
             team.add(paladin);
+            paladin.setHeroNumber(2);
             System.out.println(paladin.getName() + "(Paladin) joined your team.");
         }
     }

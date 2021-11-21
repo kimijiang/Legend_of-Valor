@@ -22,7 +22,7 @@ public class Monster {
     protected double defense;
     protected double dodgeChance;
 
-    Monster(String name, int level, double damage, double defense, double dodgeChance, int monsterNumber) {
+    Monster(String name, int level, double damage, double defense, double dodgeChance) {
         this.name = ANSI_RED + name + ANSI_RESET;
         this.level = level;
         this.HP = 100.0 * level;
@@ -30,7 +30,7 @@ public class Monster {
         this.damage = damage;
         this.defense = defense;
         this.dodgeChance = dodgeChance;
-        this.monsterNumber = monsterNumber;
+//        this.monsterNumber = monsterNumber;
     }
 
     public void attacked(double damage, Hero hero) {
@@ -79,6 +79,10 @@ public class Monster {
     }
 
     public int getLevel() {return level;}
+
+    public int getMonsterNumber() {
+        return monsterNumber;
+    }
 
     public boolean isCondition() {
         return condition;

@@ -1,16 +1,18 @@
-/**
- *
- * Author: Haoyu Zhang
- * BU ID: U81614811
- * 2021/11/06
- *
- */
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
-// Legends.java - Control the process of the game, initiate and proceed the game.
 public class Legends extends RPGGame {
 
+    private int round = 0;
+    private boolean ifPlayerWin;
+
+    private List<Monster> monsters = new ArrayList<Monster>();
+
+    private static final int NUM_HERO = 3;
+    private static final int LENGTH_EDGE = 8;
+    private static final int ROUND_SPAWN = 8;
 
     Legends() {
     }
@@ -18,37 +20,34 @@ public class Legends extends RPGGame {
 
     @Override
     public void initiateGame() {
-        System.out.println("Welcome to Legends: Monsters and Heroes!");
-        System.out.println("How many heroes would you like in the team?(1~3)");
-        Scanner input = new Scanner(System.in);
-        String strNum = null;
-        String regex1 = "[123]";
-        while((strNum = input.next()) != null) {
-            if(!strNum.matches(regex1))
-                System.out.println("Wrong input! Please input again.");
-            else
-                break;
-        }
-        player = new Player(Integer.parseInt(strNum));
-        System.out.println("What is the size of the nxn map?(6~8)");
-        String regex2 = "[678]";
-        while((strNum = input.next()) != null) {
-            if(!strNum.matches(regex2))
-                System.out.println("Wrong input! Please input again.");
-            else
-                break;
-        }
-        map = new Map(Integer.parseInt(strNum));
+        System.out.println("Welcome to Legends of Valor!");
+        player = new Player(NUM_HERO);
+        map = new Map(LENGTH_EDGE);
+        monsters = new ArrayList<Monster>();
+        monstersSpawn();
         startGame();
     }
 
 
     @Override
     public void startGame() {
-        System.out.println("Game starts!");
         map.displayMap();
+        while(isOver()) {
+            round++;
+            if(round % ROUND_SPAWN == 0)
+                monstersSpawn();
+            round();
+        }
+        if(ifPlayerWin)
+            System.out.println("Player win!");
+        else
+            System.out.println("Player lose.");
+    }
+
+
+    public void turnForHero(Hero hero) {
         Scanner input = new Scanner(System.in);
-        String regex = "[WwAaSsDdQqIiGg]";
+        String regex = "[WwAaSsDdQqIiGgTt]";
         String next = null;
         while((next = input.next()) != null) {
             if(!next.matches(regex)) {
@@ -57,13 +56,15 @@ public class Legends extends RPGGame {
             }
             else {
                 if(next.matches("[WwAaSsDd]")) {
-                    player.move(next, map);
+                    /** move function from player class to hero**/
+                    hero.move(next, map);
                     map.displayMap();
+                    break;
                 }
                 // show information
                 else if(next.matches("[Ii]"))
                     player.showInformation1();
-                // quit game
+                    // quit game
                 else if(next.matches("[Qq]")) {
                     System.out.println("Game over.");
                     System.exit(0);
@@ -71,9 +72,9 @@ public class Legends extends RPGGame {
                 // get inventory
                 else if(next.matches("[Gg]")) {
                     boolean equipOrUse = false;
-                    for(Hero hero: player.getTeam()) {
-                        hero.showEquipAndInventory();
-                        if(hero.getPotions().size() > 0 || hero.getInventory().size() > 0)
+                    for(Hero h: player.getTeam()) {
+                        h.showEquipAndInventory();
+                        if(h.getPotions().size() > 0 || h.getInventory().size() > 0)
                             equipOrUse = true;
                     }
                     if(!equipOrUse)
@@ -94,10 +95,123 @@ public class Legends extends RPGGame {
                         }
                     }
                 }
+                else if(next.matches("[Tt]")) {
+                    System.out.println("Which lane to teleport to?(0:top, 1:mid, 2:bot)");
+                    String lane = null;
+                    while((lane = input.next()) != null) {
+                        if(!lane.matches("[012]")) {
+                            System.out.println("Wrong input! Please input again.");
+                            continue;
+                        }
+                        else {
+                            // same lane
+                            if(hero.getHeroNumber() == Integer.parseInt(lane)) {
+                                System.out.println("Can't telepot to the same lane.");
+                                continue;
+                            }
+                            else {
+                                hero.teleport(Integer.parseInt(lane), map);
+                                System.out.println(hero.getName() + "teleports to ");
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                else if(next.matches("[Bb]")) {
+                    hero.back(map);
+                    break;
+                }
             }
         }
     }
 
+
+    public void turnForMonster(Monster monster) {
+        Hero enemy = null;
+        if((enemy = player.getTeam().get(map.getEnemy(monster.getMonsterNumber()))) != null)
+            enemy.attacked(monster.getDamage(), monster);
+        else
+            monster.move(map);
+    }
+
+
+    public void monstersSpawn() {
+        int level = getHighestLevel();
+        List<Monster> monsterList = new ArrayList<Monster>();
+        for(Monster monster: (List<Monster>) Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Dragons.txt"))
+            if(monster.getLevel() == level)
+                monsterList.add(monster);
+        for(Monster monster: (List<Monster>) Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Exoskeletons.txt"))
+            if(monster.getLevel() == level)
+                monsterList.add(monster);
+        for(Monster monster: (List<Monster>) Utils.scanTextFile(System.getProperty("user.dir") + "/src/ConfigFiles/Spirits.txt"))
+            if(monster.getLevel() == level)
+                monsterList.add(monster);
+        if(monsterList.size() < player.getTeam().size()) {
+            System.out.println("Oops! No enough corresponding monsters in text files.");
+            System.exit(0);
+        }
+        Random rd = new Random();
+        for(int i = 0; i<player.getTeam().size(); i++)
+            monsters.add(monsterList.get(rd.nextInt(monsterList.size())));
+        map.monstersSpawn();
+        System.out.println("Three monsters spawn.");
+    }
+
+
+    public int getHighestLevel() {
+        int highestLevel = 0;
+        for(Hero hero: player.getTeam()) {
+            if(hero.getLevel() > highestLevel)
+                highestLevel = hero.getLevel();
+        }
+        return highestLevel;
+    }
+
+
+    public boolean isOver() {
+        boolean heroReachNexus = false;
+        boolean monsterReachNexus = false;
+        int[][] location_heroes = map.getLocationOfHeroes();
+        int[][] location_monsters = map.getLocationOfMonsters();
+        for(int i=0; i<location_heroes.length; i++) {
+            if(location_heroes[i][0] == 0)
+                heroReachNexus = true;
+        }
+        for(int i=0; i<location_monsters.length; i++) {
+            if(location_monsters[i][0] == 7)
+                monsterReachNexus = true;
+        }
+        if(heroReachNexus)
+            ifPlayerWin = true;
+        else if(monsterReachNexus)
+            ifPlayerWin = false;
+        return heroReachNexus || monsterReachNexus;
+    }
+
+
+    public void round() {
+        for(Hero hero: player.getTeam())
+            hero.regainHPAndMana();
+        if(round != 1)
+            System.out.println("Heroes regain HP and mana.");
+        for(Hero hero: player.getTeam()) {
+            int enemy_monster = map.getEnemyForHero(hero.getHeroNumber());
+            if(enemy_monster != -1) {
+                new Fight(hero, monsters.get(enemy_monster)).fight();
+            }
+            else {
+                turnForHero(hero);
+                map.displayMap();
+            }
+
+        }
+        for(Monster monster: monsters) {
+            turnForMonster(monster);
+            map.displayMap();
+        }
+    }
 
 
 }

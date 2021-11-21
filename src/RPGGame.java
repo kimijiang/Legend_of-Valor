@@ -7,7 +7,7 @@
  */
 
 // RPGGame.java - The abstract class of all process the RPG game will proceed.
-public abstract class RPGGame {
+public abstract class RPGGame extends Game{
 
     protected Map map;
     protected Player player;
@@ -16,10 +16,6 @@ public abstract class RPGGame {
     public RPGGame() {
 
     }
-
-    public abstract void initiateGame();
-
-    public abstract void startGame();
 
 
 }
