@@ -242,7 +242,10 @@ public class Map {
             int heroCol = heroPostion[i][0];
             if ((heroCol == monsterCol && heroRow == monsterRow) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow) ||
-                    (heroCol == monsterCol-1 && heroRow == monsterRow)){
+                    (heroCol == monsterCol-1 && heroRow == monsterRow) ||
+                    (heroCol == monsterCol && heroRow == monsterRow-1) ||
+                    (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
+                    (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
                 return i;
             }
         }
@@ -258,7 +261,10 @@ public class Map {
             int monsterCol = monsterPostion.get(i)[0];
             if ((heroCol == monsterCol && heroRow == monsterRow) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow) ||
-                    (heroCol == monsterCol-1 && heroRow == monsterRow)){
+                    (heroCol == monsterCol-1 && heroRow == monsterRow) ||
+                    (heroCol == monsterCol && heroRow == monsterRow-1) ||
+                    (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
+                    (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
                 return i;
             }
         }
