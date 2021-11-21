@@ -140,6 +140,9 @@ public class Map {
         monsterPostion.get(monster)[1] += 1;
     }
 
+    public void monsterDead(int monster){
+        monsterPostion.set(monster, new Integer[] {-1,-1});
+    }
 
     public void displayMap() {
         // display the whole map
