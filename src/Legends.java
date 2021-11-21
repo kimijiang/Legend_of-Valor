@@ -46,6 +46,7 @@ public class Legends extends RPGGame {
 
 
     public void turnForHero(Hero hero) {
+        System.out.println("H"+(hero.getHeroNumber()+1) + "'s turn");
         Scanner input = new Scanner(System.in);
         String regex = "[WwAaSsDdQqIiGgTt]";
         String next = null;
