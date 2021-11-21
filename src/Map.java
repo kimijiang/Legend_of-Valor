@@ -167,6 +167,10 @@ public class Map {
 
     private void drawCellContent(int row){
         for (int col = 0; col<length_side; col++){
+            if (cells[col][row] instanceof Inaccessible){
+                System.out.print("| XXX |  ");
+                continue;
+            }
             String hero = "  ";
             String monster = "  ";
             for (int i = 0; i<heroPostion.length; i++){
