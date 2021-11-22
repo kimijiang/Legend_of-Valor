@@ -26,6 +26,8 @@ public class Legends extends RPGGame {
         map = new Map(LENGTH_EDGE);
         monsters = new ArrayList<Monster>();
         monstersSpawn();
+//        for(Monster monster: monsters)
+//            System.out.println("Monster:" + monster.getMonsterNumber());
         startGame();
     }
 
@@ -38,6 +40,9 @@ public class Legends extends RPGGame {
             if(round % ROUND_SPAWN == 0)
                 monstersSpawn();
             round();
+            int[][] l = map.getLocationOfHeroes();
+            for(int i=0; i<l.length; i++)
+                System.out.println("Hero" + i +":(" + l[i][0] + l[i][1] + ")");
         }
         if(ifPlayerWin)
             System.out.println("Player win!");
@@ -49,7 +54,7 @@ public class Legends extends RPGGame {
     public void turnForHero(Hero hero) {
         System.out.println("H"+(hero.getHeroNumber()+1) + "'s turn");
         Scanner input = new Scanner(System.in);
-        String regex = "[WwAaSsDdQqIiGgTt]";
+        String regex = "[WwAaSsDdQqIiGgTtBb]";
         String next = null;
         while((next = input.next()) != null) {
             if(!next.matches(regex)) {
@@ -158,8 +163,9 @@ public class Legends extends RPGGame {
         Random rd = new Random();
         for(int i = 0; i<player.getTeam().size(); i++) {
             Monster monster = monsterList.get(rd.nextInt(monsterList.size()));
-            monster.setMonsterNumber(num_monster++);
-            monsters.add(monster);
+            Monster m1 = new Monster(monster.getName(), monster.getLevel(), monster.getDamage(), monster.getDefense(), monster.getDodgeChance());
+            m1.setMonsterNumber(num_monster++);
+            monsters.add(m1);
         }
         map.monstersSpawn();
         System.out.println("Three monsters spawn.");
@@ -213,16 +219,19 @@ public class Legends extends RPGGame {
             }
 
         }
+        List<Monster> monsterList = new ArrayList<>();
         for(Monster monster: monsters) {
             if(monster.isCondition()) {
                 turnForMonster(monster);
             }
             else {
                 map.monsterDead(monster.getMonsterNumber());
-                monsters.remove(monster);
+                monsterList.add(monster);
             }
-
         }
+        if(monsterList.size() > 0)
+            for(Monster monster: monsterList)
+                monsters.remove(monster);
         map.displayMap();
     }
 

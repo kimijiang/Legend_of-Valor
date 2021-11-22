@@ -642,19 +642,19 @@ public abstract class Hero {
 //        }
 
         if(lane == 0){
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.setCell(maxMonsterX,1,1);
-            map.updateLocation(maxMonsterX,1, heroNumber);
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(1,maxMonsterX,1);
+            map.updateLocation(1,maxMonsterX, heroNumber);
         }
         else if(lane == 1){
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.setCell(maxMonsterX,4,1);
-            map.updateLocation(maxMonsterX,4, heroNumber);
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(4,maxMonsterX,1);
+            map.updateLocation(4,maxMonsterX, heroNumber);
         }
         else{
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.setCell(maxMonsterX,7,1);
-            map.updateLocation(maxMonsterX,7, heroNumber);
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(7, maxMonsterX,1);
+            map.updateLocation(7, maxMonsterX, heroNumber);
         }
 
     }
@@ -662,24 +662,24 @@ public abstract class Hero {
 
     public void back(Map map){
         if(this.heroNumber == 0){
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.updateLocation(7,0, heroNumber);
-            heroPositionX = 7;
-            heroPositionY = 0;
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.updateLocation(0,7, heroNumber);
+            heroPositionY = 7;
+            heroPositionX = 0;
         }
 
         else if(this.heroNumber == 1){
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.updateLocation(7,3, heroNumber);
-            heroPositionX = 7;
-            heroPositionY = 3;
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.updateLocation(3,7, heroNumber);
+            heroPositionY = 7;
+            heroPositionX = 3;
         }
 
         else{
-            map.setCell(heroPositionX, heroPositionY,0);
-            map.updateLocation(7,6, heroNumber);
-            heroPositionX = 7;
-            heroPositionY = 6;
+            map.setCell(heroPositionY, heroPositionX,0);
+            map.updateLocation(6,7, heroNumber);
+            heroPositionY = 7;
+            heroPositionX = 6;
         }
 
     }

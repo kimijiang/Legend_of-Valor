@@ -154,7 +154,7 @@ public class Map {
             System.out.println();
         }
 //        drawLine();
-        System.out.println("W/w: move up, A/a: move left, S/s: move down, D/d: move right, Q/q: quit game, I/i: show information, G/g: show inventory.");
+        System.out.println("W/w: move up, A/a: move left, S/s: move down, D/d: move right, T/t: teleport, B/b: back, Q/q: quit game, I/i: show information, G/g: show inventory.");
     }
 
     private void drawRowBoarder(int row){
@@ -168,7 +168,7 @@ public class Map {
     private void drawCellContent(int row){
         for (int col = 0; col<length_side; col++){
             if (cells[col][row] instanceof Inaccessible){
-                System.out.print("| XXX |  ");
+                System.out.print("|  XXX  |  ");
                 continue;
             }
             String hero = "  ";
@@ -234,6 +234,7 @@ public class Map {
         for (Integer[] n : monsterPostion){
             a[i][0] = n[0];
             a[i][1] = n[1];
+            i++;
         }
         return a;
     }
@@ -250,17 +251,17 @@ public class Map {
                     (heroCol == monsterCol && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
-                System.out.println("Monster:" + monster + "get enemy:" + i);
+//                System.out.println("Monster:" + monster + "get enemy:" + i);
                 return i;
             }
         }
-        System.out.println("Monster:" + monster + "get enemy:" + "-1");
+//        System.out.println("Monster:" + monster + "get enemy:" + "-1");
         return -1;
     }
 
 
     public int getEnemyForHero(int hero){
-        int heroRow = heroPostion[hero][1]+1;
+        int heroRow = heroPostion[hero][1]-1;
         int heroCol = heroPostion[hero][0];
         for(int i = 0; i<monsterPostion.size(); i++){
             int monsterRow = monsterPostion.get(i)[1];
@@ -268,14 +269,14 @@ public class Map {
             if ((heroCol == monsterCol && heroRow == monsterRow) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow) ||
                     (heroCol == monsterCol-1 && heroRow == monsterRow) ||
-                    (heroCol == monsterCol && heroRow == monsterRow-1) ||
-                    (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
-                    (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
-                System.out.println("Hero:" + hero + "get enemy:" + i);
+                    (heroCol == monsterCol && heroRow == monsterRow+1) ||
+                    (heroCol == monsterCol+1 && heroRow == monsterRow+1) ||
+                    (heroCol == monsterCol-1 && heroRow == monsterRow+1)){
+//                System.out.println("Hero:" + hero + "get enemy:" + i);
                 return i;
             }
         }
-        System.out.println("Hero:" + hero + "get enemy:" + "-1");
+//        System.out.println("Hero:" + hero + "get enemy:" + "-1");
         return -1;
     }
 

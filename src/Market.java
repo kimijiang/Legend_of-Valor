@@ -48,7 +48,7 @@ public abstract class Market extends Cell{
             else {
                 // Buy items
                 if(next.equals("1")) {
-                    //System.out.println("Input numbers for heroes to buy items.(exp: 0-3, which means the 0th hero to buy the 3th item.)");
+                    System.out.println("Input the number of item to buy.");
                     //String regex2 = "[0-" + (player.getTeam().size()-1) + "]-" + "[0-9]\\d{0,1}";
 //                    System.out.println(regex2);
                     String buy = null;
@@ -57,12 +57,12 @@ public abstract class Market extends Cell{
                             System.out.println("Wrong input! Please input again.");
                             continue;
                         }*/
-                            String[] num = buy.split("-");
-                            if(Integer.parseInt(num[1]) >= allCommodities.size()) {
+//                            String[] num = buy.split("-");
+                            if(Integer.parseInt(buy) >= allCommodities.size()) {
                                 System.out.println("Wrong input! Please input again.");
                                 continue;
                             }
-                            Equipment equipment = getCommodityByIndex(Integer.parseInt(num[1]));
+                            Equipment equipment = getCommodityByIndex(Integer.parseInt(buy));
                             equipment.buy(hero,equipment);
                             removeitem(equipment);
                             //buyItem(player.getTeam().get(Integer.parseInt(num[0])), Integer.parseInt(num[1])); // buy function
