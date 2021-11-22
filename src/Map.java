@@ -246,9 +246,11 @@ public class Map {
                     (heroCol == monsterCol && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
+                System.out.println("Monster:" + monster + "get enemy:" + i);
                 return i;
             }
         }
+        System.out.println("Monster:" + monster + "get enemy:" + "-1");
         return -1;
     }
 
@@ -265,9 +267,11 @@ public class Map {
                     (heroCol == monsterCol && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol+1 && heroRow == monsterRow-1) ||
                     (heroCol == monsterCol-1 && heroRow == monsterRow-1)){
+                System.out.println("Hero:" + hero + "get enemy:" + i);
                 return i;
             }
         }
+        System.out.println("Hero:" + hero + "get enemy:" + "-1");
         return -1;
     }
 

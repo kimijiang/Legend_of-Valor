@@ -9,6 +9,7 @@ public class Legends extends RPGGame {
     private boolean ifPlayerWin;
 
     private List<Monster> monsters = new ArrayList<Monster>();
+    private int num_monster = 0;
 
     private static final int NUM_HERO = 3;
     private static final int LENGTH_EDGE = 8;
@@ -57,9 +58,8 @@ public class Legends extends RPGGame {
             }
             else {
                 if(next.matches("[WwAaSsDd]")) {
-                    /** move function from player class to hero**/
                     hero.move(next, map);
-                    map.displayMap();
+//                    map.displayMap();
                     break;
                 }
                 // show information
@@ -130,8 +130,10 @@ public class Legends extends RPGGame {
 
     public void turnForMonster(Monster monster) {
         Hero enemy = null;
-        if((enemy = player.getTeam().get(map.getEnemy(monster.getMonsterNumber()))) != null)
+        if(map.getEnemy(monster.getMonsterNumber()) >= 0) {
+            enemy = player.getTeam().get(map.getEnemy(monster.getMonsterNumber()));
             enemy.attacked(monster.getDamage(), monster);
+        }
         else
             monster.move(map);
     }
@@ -154,8 +156,11 @@ public class Legends extends RPGGame {
             System.exit(0);
         }
         Random rd = new Random();
-        for(int i = 0; i<player.getTeam().size(); i++)
-            monsters.add(monsterList.get(rd.nextInt(monsterList.size())));
+        for(int i = 0; i<player.getTeam().size(); i++) {
+            Monster monster = monsterList.get(rd.nextInt(monsterList.size()));
+            monster.setMonsterNumber(num_monster++);
+            monsters.add(monster);
+        }
         map.monstersSpawn();
         System.out.println("Three monsters spawn.");
     }
@@ -199,7 +204,7 @@ public class Legends extends RPGGame {
             System.out.println("Heroes regain HP and mana.");
         for(Hero hero: player.getTeam()) {
             int enemy_monster = map.getEnemyForHero(hero.getHeroNumber());
-            if(enemy_monster != -1) {
+            if(enemy_monster >=0) {
                 new Fight(hero, monsters.get(enemy_monster)).fight();
             }
             else {
@@ -209,9 +214,16 @@ public class Legends extends RPGGame {
 
         }
         for(Monster monster: monsters) {
-            turnForMonster(monster);
-            map.displayMap();
+            if(monster.isCondition()) {
+                turnForMonster(monster);
+            }
+            else {
+                map.monsterDead(monster.getMonsterNumber());
+                monsters.remove(monster);
+            }
+
         }
+        map.displayMap();
     }
 
 

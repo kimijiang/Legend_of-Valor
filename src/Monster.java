@@ -78,6 +78,8 @@ public class Monster {
         this.dodgeChance = dodgeChance;
     }
 
+    public void setMonsterNumber(int monsterNumber) { this.monsterNumber = monsterNumber;}
+
     public int getLevel() {return level;}
 
     public int getMonsterNumber() {
@@ -95,14 +97,13 @@ public class Monster {
                 "Damage: " + damage;
     }
 
-    public boolean move(Map map){
-        int hero = map.getEnemy(monsterNumber);
-        if (hero < 0){
-            return false;
-        } else {
-            map.updateMonsterLocation(monsterNumber);
-            return true;
-        }
+    public void move(Map map){
+//        int hero = map.getEnemy(monsterNumber);
+//        if (hero < 0){
+//            return false;
+//        } else {
+        map.updateMonsterLocation(monsterNumber);
+//            return true;
     }
 
 
