@@ -569,7 +569,7 @@ public abstract class Hero {
         if(map.getCell(x, y) instanceof Inaccessible)
             System.out.println("You can not move " + direction + "!");
         else if(map.getCell(x, y) instanceof Market){
-            map.updateLocation(x, y, heroNumber); // TODO:para heronumber
+            map.updateLocation(x, y, heroNumber);
             ((Market) map.getCell(x, y)).accessed(this);
         }
         else if(map.getCell(x, y) instanceof CommonSpace) {
@@ -631,30 +631,21 @@ public abstract class Hero {
     public void teleport(int lane, Map map){
         Scanner s = new Scanner(System.in);
         int maxMonsterX = maxMonsterPosition( map.getLocationOfMonsters());
-//        while(true){
-//            System.out.println("Which lane do you want to transport to? ");
-//            lane = s.nextInt();
-//            s.nextLine();
-//            if(lane>=1 && lane<=3){
-//                break;
-//            }
-//            System.out.println("Please input the valid number of lane");
-//        }
 
         if(lane == 0){
             map.setCell(heroPositionY, heroPositionX,0);
-            map.setCell(1,maxMonsterX,1);
-            map.updateLocation(1,maxMonsterX, heroNumber);
+            map.setCell(1,maxMonsterX+1,1);
+            map.updateLocation(1,maxMonsterX+1, heroNumber);
         }
         else if(lane == 1){
             map.setCell(heroPositionY, heroPositionX,0);
-            map.setCell(4,maxMonsterX,1);
-            map.updateLocation(4,maxMonsterX, heroNumber);
+            map.setCell(4,maxMonsterX+1,1);
+            map.updateLocation(4,maxMonsterX+1, heroNumber);
         }
         else{
             map.setCell(heroPositionY, heroPositionX,0);
-            map.setCell(7, maxMonsterX,1);
-            map.updateLocation(7, maxMonsterX, heroNumber);
+            map.setCell(7, maxMonsterX+1,1);
+            map.updateLocation(7, maxMonsterX+1, heroNumber);
         }
 
     }
@@ -662,21 +653,21 @@ public abstract class Hero {
 
     public void back(Map map){
         if(this.heroNumber == 0){
-            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(heroPositionX, heroPositionY,0);
             map.updateLocation(0,7, heroNumber);
             heroPositionY = 7;
             heroPositionX = 0;
         }
 
         else if(this.heroNumber == 1){
-            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(heroPositionX, heroPositionY,0);
             map.updateLocation(3,7, heroNumber);
             heroPositionY = 7;
             heroPositionX = 3;
         }
 
         else{
-            map.setCell(heroPositionY, heroPositionX,0);
+            map.setCell(heroPositionX, heroPositionY,0);
             map.updateLocation(6,7, heroNumber);
             heroPositionY = 7;
             heroPositionX = 6;

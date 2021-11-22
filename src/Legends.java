@@ -13,7 +13,7 @@ public class Legends extends RPGGame {
 
     private static final int NUM_HERO = 3;
     private static final int LENGTH_EDGE = 8;
-    private static final int ROUND_SPAWN = 8;
+    private static final int ROUND_SPAWN = 10;
 
     Legends() {
     }
@@ -35,14 +35,11 @@ public class Legends extends RPGGame {
     @Override
     public void startGame() {
         map.displayMap();
-        while(isOver()) {
+        while(!isOver()) {
             round++;
             if(round % ROUND_SPAWN == 0)
                 monstersSpawn();
             round();
-            int[][] l = map.getLocationOfHeroes();
-            for(int i=0; i<l.length; i++)
-                System.out.println("Hero" + i +":(" + l[i][0] + l[i][1] + ")");
         }
         if(ifPlayerWin)
             System.out.println("Player win!");
@@ -161,7 +158,7 @@ public class Legends extends RPGGame {
             System.exit(0);
         }
         Random rd = new Random();
-        for(int i = 0; i<player.getTeam().size(); i++) {
+        for(int i = 0; i<3; i++) {
             Monster monster = monsterList.get(rd.nextInt(monsterList.size()));
             Monster m1 = new Monster(monster.getName(), monster.getLevel(), monster.getDamage(), monster.getDefense(), monster.getDodgeChance());
             m1.setMonsterNumber(num_monster++);
@@ -188,17 +185,22 @@ public class Legends extends RPGGame {
         int[][] location_heroes = map.getLocationOfHeroes();
         int[][] location_monsters = map.getLocationOfMonsters();
         for(int i=0; i<location_heroes.length; i++) {
-            if(location_heroes[i][0] == 0)
+            if(location_heroes[i][1] == 0) {
                 heroReachNexus = true;
+            }
         }
         for(int i=0; i<location_monsters.length; i++) {
-            if(location_monsters[i][0] == 7)
+            if(location_monsters[i][1] == 7) {
                 monsterReachNexus = true;
+                monsterReachNexus = true;
+            }
         }
-        if(heroReachNexus)
+        if(heroReachNexus) {
             ifPlayerWin = true;
-        else if(monsterReachNexus)
+        }
+        else if(monsterReachNexus) {
             ifPlayerWin = false;
+        }
         return heroReachNexus || monsterReachNexus;
     }
 
@@ -211,7 +213,10 @@ public class Legends extends RPGGame {
         for(Hero hero: player.getTeam()) {
             int enemy_monster = map.getEnemyForHero(hero.getHeroNumber());
             if(enemy_monster >=0) {
-                new Fight(hero, monsters.get(enemy_monster)).fight();
+                for(Monster monster: monsters) {
+                    if(monster.getMonsterNumber() == enemy_monster)
+                        new Fight(hero, monster).fight();
+                }
             }
             else {
                 turnForHero(hero);

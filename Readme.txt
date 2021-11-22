@@ -1,16 +1,23 @@
 # CS611-Legends
 
-Name
+Name	#Team 25
 -------------------------------------------------------------------------------------------------
 Haoyu Zhang
 U81614811
 
+Xinzhe Jiang
+U50938348
+
+Weihao Li
+U96877058
 
 Files
 -------------------------------------------------------------------------------------------------
 Armor.java - Store the information of armor and be computed during fight.
+BushCell - A subclass of CommonSpace, will increase the dexterity of hero depend on number of round stayed in
+CaveCell - A subclass of CommonSpace, will increase the agility of hero depend on number of round stayed in
 Cell.java - Single cell in the map, the super class of CommonSpace, Inaccessible and Market.
-CommonSpace.java -  A subclass of cell, fight will happen in the common space under a probability.
+CommonSpace.java -  A subclass of cell and also an abstract class, fight will happen in the common space under a probability.
 Dragon.java - A subclass of monster, has a higher damage.
 Equipment.java - All things heroes can be equipped with and use are thought as equipment.
 Exoskeleton.java - A subclass of monster, has increased defense.
@@ -20,6 +27,7 @@ Hero.java - Store the information of hero in the player's team, all things they 
 IceSpell.java - A subclass of spell, it will reduce the damage of monsters.
 Inaccessible.java - A subclass of cell, it represents the cell can't be accessed by heroes.
 Inventory.java - Store all things in hero's inventory.
+KoulouCell - A subclass of CommonSpace, will increase the strength of hero depend on number of round stayed in
 Legends.java - Control the process of the game, initiate and proceed the game.
 LightningSpell.java - A subclass of spell, it will reduce the dodge chance of monsters.
 Main.java - Main function to run the programme.
@@ -43,11 +51,11 @@ Notes:
 1. Files to be parsed should be stored in ConfigFiles, for parser class to read class
 2. Bonus Done:
 Add some colored output:
-1) The signs representing Market, Inaccessible and heroes team on the map are colored.
+1) The signs representing Nexus, Inaccessible are colored.
 2) The name of heroes and monster are colored.
 
 3. Things instructions to note:
-I'm coding my project in Mac.
+I'm coding my project in Mac with jdk 16.
 
 
 How to run:

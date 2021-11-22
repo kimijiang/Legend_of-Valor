@@ -102,7 +102,7 @@ public class Monster {
 //        if (hero < 0){
 //            return false;
 //        } else {
-        System.out.println("Monster:" + monsterNumber + " Location:" + map.getLocationOfMonsters()[monsterNumber][0] + ", " + map.getLocationOfMonsters()[monsterNumber][1]);
+//        System.out.println("Monster:" + monsterNumber + " Location:" + map.getLocationOfMonsters()[monsterNumber][0] + ", " + map.getLocationOfMonsters()[monsterNumber][1]);
 //        System.out.println(map.getLocationOfMonsters());
         map.updateMonsterLocation(monsterNumber);
 //            return true;

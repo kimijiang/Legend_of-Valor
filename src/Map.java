@@ -222,8 +222,9 @@ public class Map {
     }
 
     public void setCell(int x,int y,int flag) {
-        cells[x][y].setFlag(flag);
+        cells[y][x].setFlag(flag);
     }
+
     public int[][] getLocationOfHeroes(){
         return heroPostion;
     }
